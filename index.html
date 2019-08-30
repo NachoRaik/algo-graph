@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<title>AlgoGraph</title>
+
+	<style type="text/css">
+		body {
+		  font: 10pt sans;
+		}
+		#network {
+			float:left;
+			width: 600px;
+			height: 600px;
+			margin:5px;
+			border: 1px solid lightgray;
+		}
+		#config {
+			float:left;
+			width: 400px;
+			height: 600px;
+		}
+		#input_output {
+			height: 10%;
+			width: 15%;
+		}
+		p {
+			font-size:16px;
+			max-width:700px;
+		}
+	</style>
+
+	<script type="text/javascript" src="graph.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/vis-network@latest/dist/vis-network.min.js"></script>
+	<link href="https://unpkg.com/vis-network@latest/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+	<div id="network"></div>
+
+	<div>
+		<textarea id=input_output></textarea>
+		<input type="button" id="import_button" onclick="importNetwork()" value="Import"></input>
+		<input type="button" id="export_button" onclick="exportNetwork()" value="Export"></input>
+		<input type="button" id="destroy_button" onclick="destroyNetwork()" value="Destroy"></input>
+	</div>
+
+	<table>
+	<tr>
+		<td>
+			<h2>Node</h2>
+			<table>
+				<tr>
+					<td></td>
+					<td><label for="node-id">Id</label></td>
+					<td><input id="node-id" type="text" value="6"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><label for="node-label">Label</label></td>
+					<td><input id="node-label" type="text" value="Node 6"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Action</td>
+					<td>
+						<button id="node-add" onclick="addNodeAction();">Add</button>
+						<!-- <button id="node-update" onclick="updateNode();">Update</button>
+						<button id="node-remove" onclick="removeNode();">Remove</button> -->
+					</td>
+				</tr>
+			</table>
+		</td>
+		<!-- <td>
+			<h2>Edge</h2>
+			<table>
+				<tr>
+					<td></td>
+					<td><label for="edge-id">Id</label></td>
+					<td><input id="edge-id" type="text" value="5"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><label for="edge-from">From</label></td>
+					<td><input id="edge-from" type="text" value="3"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><label for="edge-to">To</label></td>
+					<td><input id="edge-to" type="text" value="4"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Action</td>
+					<td>
+						<button id="edge-add" onclick="addEdge();">Add</button>
+						<button id="edge-update" onclick="updateEdge();">Update</button>
+						<button id="edge-remove" onclick="removeEdge();">Remove</button>
+					</td>
+				</tr>
+			</table>
+		</td> -->
+	</tr>
+
+</table>
+
+	<script type="text/javascript">
+		var graph;
+		var network;
+		var container;
+
+		var exportArea;
+		var importButton;
+		var exportButton;
+
+		function init() {
+			container = document.getElementById('network');
+			exportArea = document.getElementById('input_output');
+			importButton = document.getElementById('import_button');
+			exportButton = document.getElementById('export_button');
+
+			graph = getGraph();
+			graph.nodes = new vis.DataSet();
+			graph.nodes.add([
+				{id: '1', label: 'Node 1'},
+				{id: '2', label: 'Node 2'},
+				{id: '3', label: 'Node 3'},
+				{id: '4', label: 'Node 4'},
+				{id: '5', label: 'Node 5'}
+			]);
+			graph.edges = new vis.DataSet();
+			graph.edges.add([
+				{id: '1', from: '1', to: '2'},
+				{id: '2', from: '1', to: '3'},
+				{id: '3', from: '2', to: '4'},
+				{id: '4', from: '2', to: '5'}
+			]);
+
+			draw();
+		}
+
+		function addNodeAction() {
+			try {
+				let id = document.getElementById('node-id').value;
+				let label = document.getElementById('node-label').value;
+				addNode(graph, id, label);
+				draw();
+			}
+			catch (err) {
+				alert(err);
+			}
+		}
+
+		function addEdgeAction() {
+			try {
+				let id = document.getElementById('edge-id').value;
+				let from = document.getElementById('edge-from').value;
+				let to = document.getElementById('edge-to').value;
+				addEdge(graph, id, from, to);
+				draw();
+			}
+			catch (err) {
+				alert(err);
+			}
+		}
+
+		function draw() {
+			// create a network
+			var container = document.getElementById('network');
+			var data = {
+				nodes: graph.nodes,
+				edges: graph.edges
+			};
+			var options = {};
+			network = new vis.Network(container, data, options);
+		}
+
+		init();
+
+	</script>
+</body>
+</html>
