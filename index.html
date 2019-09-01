@@ -76,7 +76,7 @@
 				</tr>
 			</table>
 		</td>
-		<!-- <td>
+		<td>
 			<h2>Edge</h2>
 			<table>
 				<tr>
@@ -87,24 +87,24 @@
 				<tr>
 					<td></td>
 					<td><label for="edge-from">From</label></td>
-					<td><input id="edge-from" type="text" value="3"></td>
+					<td><select id="edge-from"></select></td>
 				</tr>
 				<tr>
 					<td></td>
 					<td><label for="edge-to">To</label></td>
-					<td><input id="edge-to" type="text" value="4"></td>
+					<td><select id="edge-to"></select></td>
 				</tr>
 				<tr>
 					<td></td>
 					<td>Action</td>
 					<td>
-						<button id="edge-add" onclick="addEdge();">Add</button>
-						<button id="edge-update" onclick="updateEdge();">Update</button>
-						<button id="edge-remove" onclick="removeEdge();">Remove</button>
+						<button id="edge-add" onclick="addEdgeAction();">Add</button>
+						<!-- <button id="edge-update" onclick="updateEdge();">Update</button>
+						<button id="edge-remove" onclick="removeEdge();">Remove</button> -->
 					</td>
 				</tr>
 			</table>
-		</td> -->
+		</td>
 	</tr>
 
 </table>
@@ -142,6 +142,7 @@
 			]);
 
 			draw();
+			updateNodeSelect();
 		}
 
 		function addNodeAction() {
@@ -149,11 +150,26 @@
 				let id = document.getElementById('node-id').value;
 				let label = document.getElementById('node-label').value;
 				addNode(graph, id, label);
+				updateNodeSelect();
 				draw();
 			}
 			catch (err) {
 				alert(err);
 			}
+		}
+
+		function updateNodeSelect() {
+			let options = graph.nodes.getIds().map(id => new Option(id, id));
+
+			let edgeTo = document.getElementById('edge-to');
+			let edgeFrom = document.getElementById('edge-from');
+
+			edgeTo.options.length = 0;
+			edgeFrom.options.length = 0;
+			graph.nodes.getIds().forEach((id, i) => {
+				edgeTo.options[i] = new Option(id, id)
+				edgeFrom.options[i] = new Option(id, id)
+			})
 		}
 
 		function addEdgeAction() {
@@ -180,7 +196,7 @@
 			network = new vis.Network(container, data, options);
 		}
 
-		init();
+		window.onload = init;
 
 	</script>
 </body>
